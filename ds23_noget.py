@@ -140,7 +140,6 @@ with model_training:
     # Adicionar um controle de camadas para exibir a soma das vendas previstas nos clusters
     folium.map.LayerControl(collapsed=False, overlay=True, control=False, position='topright').add_to(mapa2)
     marker_cluster.add_child(folium.map.Popup(soma_venda_predita))
-
     
     # Exibir o mapa com o heatmap e os marcadores no Streamlit
     folium_static(mapa2)
