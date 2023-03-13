@@ -7,10 +7,10 @@ from streamlit_folium import st_folium
 from folium.plugins import HeatMap
 from streamlit_folium import folium_static
 from folium.plugins import MarkerCluster, HeatMap
-import locale
-import matplotlib.pyplot as plt
-from matplotlib.dates import DateFormatter
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+# import locale
+# import matplotlib.pyplot as plt
+# from matplotlib.dates import DateFormatter
+# locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 header = st.container()
 dataset = st.container()
 features = st.container()
