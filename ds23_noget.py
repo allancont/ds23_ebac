@@ -20,8 +20,8 @@ def load_data(file_data):
     except:
         return pd.read_csv(file_data, dtype=dtypes,decimal=',',sep=';',parse_dates=['periodo'])
 
-file_path_vendas = "https://github.com/allancont/ds23_ebac/blob/main/vendas.csv" #"data/vendas.csv"
-file_path_vendas_predita2 = "https://github.com/allancont/ds23_ebac/blob/main/vendas_predita2.csv" 
+# file_path_vendas = "https://github.com/allancont/ds23_ebac/blob/main/vendas.csv" #"data/vendas.csv"
+# file_path_vendas_predita2 = "https://github.com/allancont/ds23_ebac/blob/main/vendas_predita2.csv" 
 
 with header:
     st.title ('Estudo de viabilidade econômica DS-23')
@@ -43,10 +43,10 @@ with dataset:
     
     dtypes = {"cod_IBGE": str, "cidade": str, "UF": str,"latitude": float,"longitude": float,"venda_predita": float }
     # df = pd.read_csv(file_path_vendas_predita2,dtype=dtypes,decimal=',',sep=';')
-    df = load_data(file_path_vendas_preditas2)
+    df = load_data("https://github.com/allancont/ds23_ebac/blob/main/vendas_predita2.csv")
     dtypes = {"Cidade": str, "UF": str,"venda_total": float,"periodo": str  ,"venda_predita": float }
     usecols = ["Cidade", "UF","venda_total",'periodo']
-    df_vendas = load_data(file_path_vendas)
+    df_vendas = load_data("https://github.com/allancont/ds23_ebac/blob/main/vendas.csv")
     df_vendas['periodo'] = pd.to_datetime(df_vendas['periodo'])
     df_vendas['mes_ano'] = df_vendas['periodo'].dt.strftime('%Y-%m')
 
