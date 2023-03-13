@@ -20,8 +20,8 @@ def load_data(file_data):
     except:
         return pd.read_csv(file_data, dtype=dtypes,decimal=',',sep=';',parse_dates=['periodo'])
 
-file_path_vendas = "vendas.csv" #"data/vendas.csv"
-file_path_vendas_predita2 = "vendas_predita2.csv"#"data/vendas_predita2.csv"
+file_path_vendas = "https://github.com/allancont/ds23_ebac/blob/main/vendas.csv" #"data/vendas.csv"
+file_path_vendas_predita2 = "https://github.com/allancont/ds23_ebac/blob/main/vendas_predita2.csv" 
 
 with header:
     st.title ('Estudo de viabilidade econômica DS-23')
