@@ -12,7 +12,7 @@ dataset = st.container()
 features = st.container()
 model_training  = st.container()
 
-# Função para ler os dados
+
 @st.cache_data
 def load_data(file_data):
     try:
@@ -20,8 +20,8 @@ def load_data(file_data):
     except:
         return pd.read_csv(file_data, dtype=dtypes,decimal=',',sep=';',parse_dates=['periodo'])
 
-# file_path_vendas = "https://github.com/allancont/ds23_ebac/blob/main/vendas.csv" #"data/vendas.csv"
-# file_path_vendas_predita2 = "https://github.com/allancont/ds23_ebac/blob/main/vendas_predita2.csv" 
+file_path_vendas = "vendas.csv" #"data/vendas.csv"
+file_path_vendas_predita2 = "vendas_predita2.csv"#"data/vendas_predita2.csv"
 
 with header:
     st.title ('Estudo de viabilidade econômica DS-23')
@@ -43,10 +43,10 @@ with dataset:
     
     dtypes = {"cod_IBGE": str, "cidade": str, "UF": str,"latitude": float,"longitude": float,"venda_predita": float }
     # df = pd.read_csv(file_path_vendas_predita2,dtype=dtypes,decimal=',',sep=';')
-    df = load_data("https://github.com/allancont/ds23_ebac/blob/main/vendas_predita2.csv")
+    df = load_data(file_path_vendas_predita2)
     dtypes = {"Cidade": str, "UF": str,"venda_total": float,"periodo": str  ,"venda_predita": float }
     usecols = ["Cidade", "UF","venda_total",'periodo']
-    df_vendas = load_data("https://github.com/allancont/ds23_ebac/blob/main/vendas.csv")
+    df_vendas = load_data(file_path_vendas)
     df_vendas['periodo'] = pd.to_datetime(df_vendas['periodo'])
     df_vendas['mes_ano'] = df_vendas['periodo'].dt.strftime('%Y-%m')
 
@@ -55,9 +55,6 @@ with dataset:
     
     st.markdown('**Vendas mensais utilizadas no período**')
     st.bar_chart(df_soma,use_container_width=True,width=5)
-
-
-
 
 with features:
     st.header('Metodologia Aplicada')
@@ -72,7 +69,7 @@ with model_training:
 
     with sel_col:
         cidade_selecionada = st.selectbox('Selecione uma cidade:', cidades)
-        km_dist=sel_col.slider("Qual o raio em km você deseja obter para compor a região da cidade pesquisada?",min_value=10,max_value=200,value=20,step=10)
+        km_dist=sel_col.slider("Qual o raio em km você deseja obter para compor a região da cidade pesquisada?",min_value=10,max_value=200,value=50,step=10)
         
     filtro = (df['cidade'] == cidade_selecionada)
     lat_ref=np.asarray(df[filtro].latitude)[0]
@@ -92,10 +89,6 @@ with model_training:
     df_pesq['venda prevista'] = df_pesq['venda_predita'].apply(lambda x: '{:,.0f}'.format(x).replace(',', '.'))
     
     total = df_pesq['venda_predita'].sum()
-    # total_formatado = locale.currency(total, grouping=True)
-    # st.write('Total:', total_formatado)
-    # with sel_col:
-
     
     with disp_col:        
         st.write(df_pesq[['cidade','distancia','venda prevista']].set_index('cidade'))
@@ -104,17 +97,18 @@ with model_training:
       
     st.markdown(f"**Mapa de vendas projetadas por região num raio de {km_dist} km**")
 
-        
-
     #Criando o objeto do mapa
-    # st.write(df.sample(3))
-    mapa2 = folium.Map(location=[-19.912998, -43.940933], zoom_start=6)
+    # with sel_col:
+    region = st.radio("Escolha o nível de detalhamento do mapa:",('Micro', 'Macro'),index=1)
+    if region == 'Micro':
+        mapa2 = folium.Map(location=[lat_ref, lon_ref], zoom_start=10)
+    else:
+        mapa2 = folium.Map(location=[-19.912998, -43.940933], zoom_start=6)
     data=df[['cidade','latitude', 'longitude', 'venda_predita']]#.copy()
     ipa_loc=(data[(data['latitude']==-19.7992)&(data['longitude']==-41.7164)].index[0])
     data.drop(ipa_loc,inplace=True)
 
     # Adicione um mapa de calor com base nos dados de vendas
-    # st.write(data.head(2).to_dict())
     dt1=data[['latitude', 'longitude', 'venda_predita']]
     heatmap = HeatMap(data=dt1.values.tolist(),
                       name='Venda projetada',
@@ -150,6 +144,11 @@ with model_training:
     
     # Exibir o mapa com o heatmap e os marcadores no Streamlit
     folium_static(mapa2)
+
+    
+
+
+    
 
     
 
